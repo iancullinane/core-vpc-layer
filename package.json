@@ -1,12 +1,16 @@
 {
-  "name": "core-vpc-layer",
-  "version": "0.2.0",
-  "main":  "lib/index.ts",
+  "name": "@ianpants/core-vpc-layer",
+  "version": "0.5.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",

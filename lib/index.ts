@@ -1,6 +1,6 @@
-import * as cdk from "aws-cdk-lib";
+import {CfnOutput} from "aws-cdk-lib";
 import { Construct } from 'constructs';
-import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import {NatProvider, InstanceType, Vpc, IVpc, SecurityGroup} from 'aws-cdk-lib/aws-ec2';
 
 export interface CoreVpcProps {
   cidrRange?: string;
@@ -9,29 +9,29 @@ export interface CoreVpcProps {
 
 export class CoreVpcStack extends Construct {
 
-  public readonly vpc: ec2.IVpc;
+  public readonly CoreVpc: IVpc;
 
   constructor(scope: Construct, id: string, props: CoreVpcProps = {cidrRange: "192.168.0.0/16", azs: 1}) {
     super(scope, id);
 
     // Configure the `natGatewayProvider` when defining a Vpc
-    const natGatewayProvider = ec2.NatProvider.instance({
-      instanceType: new ec2.InstanceType('t2.micro'),
+    const natGatewayProvider = NatProvider.instance({
+      instanceType: new InstanceType('t2.micro'),
     });
 
 
     // The code that defines your stack goes here
-    const baseVpc = new ec2.Vpc(this, 'base-vpc', {
+    const baseVpc = new Vpc(this, 'base-vpc', {
       cidr: props.cidrRange,
       maxAzs: props.azs,
       natGatewayProvider: natGatewayProvider,
     })
-    const vpcSG = new ec2.SecurityGroup(this, 'SG', { vpc: baseVpc });
+    const vpcSG = new SecurityGroup(this, 'SG', { vpc: baseVpc });
 
 
 
-    new cdk.CfnOutput(this, "VPC ID", { value: baseVpc.vpcId});
-    new cdk.CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId});
+    new CfnOutput(this, "VPC ID", { value: baseVpc.vpcId});
+    new CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId});
   }
 }
 
