@@ -1,9 +1,7 @@
 {
-  "name": "core-vpc",
-  "version": "0.1.0",
-  "bin": {
-    "core-vpc": "bin/core-vpc.js"
-  },
+  "name": "core-vpc-layer",
+  "version": "0.2.0",
+  "main":  "lib/index.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
