@@ -1,15 +1,19 @@
-import {CfnOutput} from "aws-cdk-lib";
+import {CfnOutput, ITaggable, TagManager} from "aws-cdk-lib";
 import { Construct } from 'constructs';
 import {NatProvider, InstanceType, Vpc, IVpc, SecurityGroup} from 'aws-cdk-lib/aws-ec2';
+
+
 
 export interface CoreVpcProps {
   cidrRange?: string;
   azs?: number;
 }
 
-export class CoreVpcStack extends Construct {
+export class CoreVpcStack extends Construct implements ITaggable {
 
   public readonly CoreVpc: IVpc;
+  public readonly tags: TagManager;
+  
 
   constructor(scope: Construct, id: string, props: CoreVpcProps = {cidrRange: "192.168.0.0/16", azs: 1}) {
     super(scope, id);
@@ -27,6 +31,7 @@ export class CoreVpcStack extends Construct {
       natGatewayProvider: natGatewayProvider,
     })
     const vpcSG = new SecurityGroup(this, 'SG', { vpc: baseVpc });
+
 
 
 
