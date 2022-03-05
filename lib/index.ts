@@ -5,68 +5,41 @@ import { NatProvider, InstanceType, Vpc, IVpc, SecurityGroup } from 'aws-cdk-lib
 export interface CoreVpcProps {
   cidrRange?: string;
   azs?: number;
+  natInstanceType?: string;
 }
 
 export class CoreVpcStack extends Construct implements ITaggable {
 
-  public readonly CoreVpc: IVpc;
+  public readonly vpc: IVpc;
   public readonly tags: TagManager;
 
   constructor(scope: Construct, id: string, props: CoreVpcProps = { cidrRange: "192.168.0.0/16", azs: 1 }) {
     super(scope, id);
 
+    if (props.natInstanceType === undefined) {
+      props.natInstanceType = "t1.micro";
+    }
+
     // Configure the `natGatewayProvider` when defining a Vpc
     const natGatewayProvider = NatProvider.instance({
-      instanceType: new InstanceType('t2.micro'),
+      instanceType: new InstanceType(props.natInstanceType),
     });
 
     // The code that defines your stack goes here
-    const baseVpc = new Vpc(this, 'base-vpc', {
+    const vpc = new Vpc(this, 'base-vpc', {
       cidr: props.cidrRange,
       maxAzs: props.azs,
       natGatewayProvider: natGatewayProvider,
     })
-    const vpcSG = new SecurityGroup(this, 'SG', { vpc: baseVpc });
 
+    const vpcSG = new SecurityGroup(this, 'SG', { vpc: vpc });
+    this.vpc = vpc;
 
     new CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId });
     new CfnOutput(this, 'sheetaVPC', {
-      value: baseVpc.vpcId,
+      value: vpc.vpcId,
       description: 'The core vpc ID',
       exportName: 'core-vpc-id',
     });
   }
 }
-
-
-// import * as ec2 from '@aws-cdk/aws-ec2';
-// import * as cdk from '@aws-cdk/core';
-
-// export class CdkStarterStack extends cdk.Stack {
-//   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-//     super(scope, id, props);
-
-//     const vpc = new ec2.Vpc(this, 'my-cdk-vpc', {
-//       cidr: '10.0.0.0/16',
-//       natGateways: 1,
-//       maxAzs: 3,
-//       subnetConfiguration: [
-//         {
-//           name: 'private-subnet-1',
-//           subnetType: ec2.SubnetType.PRIVATE,
-//           cidrMask: 24,
-//         },
-//         {
-//           name: 'public-subnet-1',
-//           subnetType: ec2.SubnetType.PUBLIC,
-//           cidrMask: 24,
-//         },
-//         {
-//           name: 'isolated-subnet-1',
-//           subnetType: ec2.SubnetType.ISOLATED,
-//           cidrMask: 28,
-//         },
-//       ],
-//     });
-//   }
-// }
