@@ -13,7 +13,5 @@ steps:
     image: plugins/npm
     settings:
       username: eignhpants
-      password: password
+      password:
         from_secret: npm_pw
-      token:
-        from_secret: npm_token
