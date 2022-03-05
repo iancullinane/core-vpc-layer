@@ -13,5 +13,6 @@ steps:
     image: plugins/npm
     settings:
       username: eignhpants
+      email: ian.cullinane@gmail.com
       password:
         from_secret: npm_pw
