@@ -1,8 +1,6 @@
-import {CfnOutput, ITaggable, TagManager} from "aws-cdk-lib";
+import { CfnOutput, ITaggable, TagManager } from "aws-cdk-lib";
 import { Construct } from 'constructs';
-import {NatProvider, InstanceType, Vpc, IVpc, SecurityGroup} from 'aws-cdk-lib/aws-ec2';
-
-
+import { NatProvider, InstanceType, Vpc, IVpc, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
 
 export interface CoreVpcProps {
   cidrRange?: string;
@@ -13,16 +11,14 @@ export class CoreVpcStack extends Construct implements ITaggable {
 
   public readonly CoreVpc: IVpc;
   public readonly tags: TagManager;
-  
 
-  constructor(scope: Construct, id: string, props: CoreVpcProps = {cidrRange: "192.168.0.0/16", azs: 1}) {
+  constructor(scope: Construct, id: string, props: CoreVpcProps = { cidrRange: "192.168.0.0/16", azs: 1 }) {
     super(scope, id);
 
     // Configure the `natGatewayProvider` when defining a Vpc
     const natGatewayProvider = NatProvider.instance({
       instanceType: new InstanceType('t2.micro'),
     });
-
 
     // The code that defines your stack goes here
     const baseVpc = new Vpc(this, 'base-vpc', {
@@ -33,10 +29,12 @@ export class CoreVpcStack extends Construct implements ITaggable {
     const vpcSG = new SecurityGroup(this, 'SG', { vpc: baseVpc });
 
 
-
-
-    new CfnOutput(this, "VPC ID", { value: baseVpc.vpcId});
-    new CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId});
+    new CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId });
+    new CfnOutput(this, 'sheetaVPC', {
+      value: baseVpc.vpcId,
+      description: 'The core vpc ID',
+      exportName: 'core-vpc-id',
+    });
   }
 }
 
