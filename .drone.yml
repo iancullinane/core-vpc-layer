@@ -9,12 +9,11 @@ steps:
       - npm install
       - ./node_modules/typescript/bin/tsc
 
-  # - name: npm
-  #   image: plugins/npm
-  #   settings:
-  #     username:
-  #       from_secret: npm_un
-  #     password: password
-  #       from_secret: npm_pw
-  #     token:
-  #       from_secret: npm_token
+  - name: npm
+    image: plugins/npm
+    settings:
+      username: eignhpants
+      password: password
+        from_secret: npm_pw
+      token:
+        from_secret: npm_token
