@@ -16,3 +16,5 @@ steps:
       email: ian.cullinane@gmail.com
       password:
         from_secret: npm_pw
+      token:
+        from_secret: npm_token
