@@ -17,7 +17,7 @@ export class CoreVpcStack extends Construct implements ITaggable {
     super(scope, id);
 
     if (props.natInstanceType === undefined) {
-      props.natInstanceType = "t1.micro";
+      props.natInstanceType = "t2.micro";
     }
 
     // Configure the `natGatewayProvider` when defining a Vpc
