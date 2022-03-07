@@ -10,7 +10,7 @@ export interface CoreVpcProps {
 
 export class CoreVpcStack extends Construct implements ITaggable {
 
-  public readonly vpc: IVpc;
+  public readonly vpc: Vpc;
   public readonly tags: TagManager;
 
   constructor(scope: Construct, id: string, props: CoreVpcProps = { cidrRange: "192.168.0.0/16", azs: 1 }) {
