@@ -35,7 +35,11 @@ export class CoreVpcStack extends Construct implements ITaggable {
     const vpcSG = new SecurityGroup(this, 'SG', { vpc: vpc });
     this.vpc = vpc;
 
-    new CfnOutput(this, "SG ID", { value: vpcSG.securityGroupId });
+    new CfnOutput(this, "SG ID", {
+      value: vpcSG.securityGroupId,
+      description: 'The core vpc security group ID',
+      exportName: 'core-vpc-sg-id',
+    });
     new CfnOutput(this, 'sheetaVPC', {
       value: vpc.vpcId,
       description: 'The core vpc ID',
